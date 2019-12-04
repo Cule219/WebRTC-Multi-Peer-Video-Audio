@@ -4,8 +4,7 @@ var socketCount = 0;
 var socketId;
 var localStream;
 var connections = [];
-
-
+var allClients = []
 
 var peerConnectionConfig = {
     'iceServers': [
@@ -13,8 +12,11 @@ var peerConnectionConfig = {
         {'urls': 'stun:stun.l.google.com:19302'},
     ]
 };
-
-function pageReady() {
+var name; 
+function pageReady() {  
+    name = prompt('name?')
+    
+    //name = 'niko'
 
     localVideo = document.getElementById('localVideo');
     remoteVideo = document.getElementById('remoteVideo');
@@ -30,7 +32,7 @@ function pageReady() {
             .then(function(){
 
                 socket = io.connect(config.host, {secure: true});
-                socket.on('signal', gotMessageFromServer);    
+                socket.on('signal', gotMessageFromServer);  
 
                 socket.on('connect', function(){
 
@@ -38,9 +40,11 @@ function pageReady() {
 
                     socket.on('user', function(data){
                         console.log(data)
+                        
                     })
                     socket.on('user2', function(data){
                         console.log(data)
+                        
                     })
                     socket.on('user3', function(data){
                         console.log(data)
@@ -54,6 +58,8 @@ function pageReady() {
 
 
                     socket.on('user-joined', function(id, count, clients){
+                        console.log(id, count, clients)
+                        allClients = clients
                         clients.forEach(function(socketListId) {
                             if(!connections[socketListId]){
                                 connections[socketListId] = new RTCPeerConnection(peerConnectionConfig);
@@ -61,12 +67,13 @@ function pageReady() {
                                 connections[socketListId].onicecandidate = function(){
                                     if(event.candidate != null) {
                                         console.log('SENDING ICE');
-                                        socket.emit('signal', socketListId, JSON.stringify({'ice': event.candidate}));
+                                        socket.emit('signal', socketListId, JSON.stringify({'ice': event.candidate, 'name':name }));
                                     }
                                 }
 
                                 //Wait for their video stream
                                 connections[socketListId].onaddstream = function(){
+                                    console.log('emit',socketListId, name)
                                     gotRemoteStream(event, socketListId)
                                 }    
 
@@ -108,12 +115,19 @@ function getUserMediaSuccess(stream) {
 // video.play();
 
 function gotRemoteStream(event, id) {
-
     var videos = document.querySelectorAll('video'),
         video  = document.createElement('video'),
-        div    = document.createElement('div')
+        div    = document.createElement('div'),
 
+        nameDiv = document.createElement('div');
+
+
+        div.setAttribute('id', 'hi')
+
+
+    
     video.setAttribute('data-socket', id);
+    video.setAttribute('username', 'name');
     //video.src         = window.URL.createObjectURL(event.stream);
     video.srcObject=event.stream
       //  localStream = stream;
@@ -123,10 +137,13 @@ function gotRemoteStream(event, id) {
     video.muted       = true;
     video.playsinline = true;
     
-    div.appendChild(video);      
+    div.appendChild(video);  
+    div.appendChild(nameDiv);    
     document.querySelector('.videos').appendChild(div);      
 }
 
+let i = 0; 
+let newClients = [] 
 function gotMessageFromServer(fromId, message) {
 
     //Parse the incoming signal
@@ -134,6 +151,16 @@ function gotMessageFromServer(fromId, message) {
 
     //Make sure it's not coming from yourself
     if(fromId != socketId) {
+        i++; 
+        console.log(allClients)
+        if(allClients.length > 1){
+            newClients = allClients.map(client=>{
+                return { id: client, name: signal.name}
+            })
+        }
+        console.log(signal.name, allClients, i, newClients, '????')
+
+
 
         if(signal.sdp){            
             connections[fromId].setRemoteDescription(new RTCSessionDescription(signal.sdp)).then(function() {                
