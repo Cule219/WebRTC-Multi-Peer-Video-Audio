@@ -3,6 +3,7 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var cors = require('cors')
 var bodyParser = require('body-parser')
+var axios = require('axios')
 
 // parse application/json
 app.use(bodyParser.json())
@@ -24,6 +25,17 @@ app.get('/', function(req, res){
 
 app.post('/', function(req, res, next){
 	console.log(req.body, req.params, req.query)
+	console.log('in here!')
+	axios
+	.get(`https://www.codewars.com/api/v1/users/${req.body.webhook.id}`)
+	.then(data => {
+		console.log(`This is the information on ${userInfo}`);
+		console.log(data);
+	})
+	.catch(err => {
+		// console.log("User not found!")
+		console.log(err);
+	});
 })
 
 io.on('connection', function(socket){
