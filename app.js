@@ -18,6 +18,7 @@ app.use(cors({
 
 app.get('/', function(req, res){
 	console.log(req.body, req.params, req.query)
+	console.log("Successfully added as collab")
   res.sendFile(__dirname + '/index.html');
 });
 
