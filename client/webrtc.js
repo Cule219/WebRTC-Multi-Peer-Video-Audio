@@ -83,9 +83,17 @@ function pageReady() {
 }
 
 function getUserMediaSuccess(stream) {
+    console.log(localVideo, stream)
     localStream = stream;
-    localVideo.src = window.URL.createObjectURL(stream);
+    //localVideo.src = window.URL.createObjectURL(stream);
+    localVideo.srcObject=stream;
+
 }
+
+// video.src=vendorUrl.createObjectURL(stream);
+// video.play();
+// video.srcObject=stream;
+// video.play();
 
 function gotRemoteStream(event, id) {
 
@@ -94,7 +102,11 @@ function gotRemoteStream(event, id) {
         div    = document.createElement('div')
 
     video.setAttribute('data-socket', id);
-    video.src         = window.URL.createObjectURL(event.stream);
+    //video.src         = window.URL.createObjectURL(event.stream);
+    video.srcObject=event.stream
+      //  localStream = stream;
+    //localVideo.src = window.URL.createObjectURL(stream);
+    //localVideo.srcObject=stream;
     video.autoplay    = true; 
     video.muted       = true;
     video.playsinline = true;
