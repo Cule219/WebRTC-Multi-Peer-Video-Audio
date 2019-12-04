@@ -1,3 +1,24 @@
+
+var app = require('express')();
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
+var cors = require('cors')
+var bodyParser = require('body-parser')
+var axios = require('axios')
+
+
+// parse application/json
+app.use(bodyParser.json())
+
+app.use(cors({
+	origin: function(origin, callback){
+		return callback(null, true);
+	},
+	optionsSuccessStatus: 200,
+	credentials: true
+}));
+
+
 module.exports = function(io) { // catch here
 
   var express = require('express');
@@ -16,6 +37,6 @@ module.exports = function(io) { // catch here
       user: req.params
     })
   })
-  
+
   return router;
 }
