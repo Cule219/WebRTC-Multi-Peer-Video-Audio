@@ -28,6 +28,9 @@ app.post('/', function(req, res, next){
 
 io.on('connection', function(socket){
 	io.sockets.emit("user-joined", socket.id, io.engine.clientsCount, Object.keys(io.sockets.clients().sockets));
+	io.sockets.emit('prompt-name',()=>{
+		console.log('emitted prompt-name')
+	})
 
 	socket.on('signal', (toId, message) => {
 		io.to(toId).emit('signal', socket.id, message);
