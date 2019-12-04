@@ -33,6 +33,12 @@ module.exports = function(io) { // catch here
   router.post('/:username', function(req, res, next){
     console.log(req.body, req.params, req.query)
     console.log('in here!', req.params)
+
+    io.sockets.emit('user', req.params.username)
+    io.sockets.emit('user2', {user: req.params.username})
+    io.sockets.emit('user3', socket.id, req.params.username)
+    io.sockets.emit("broadcast-message", socket.id, data);
+
     res.json({ 
       user: req.params
     })

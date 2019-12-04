@@ -5,6 +5,8 @@ var socketId;
 var localStream;
 var connections = [];
 
+
+
 var peerConnectionConfig = {
     'iceServers': [
         {'urls': 'stun:stun.services.mozilla.com'},
@@ -34,6 +36,16 @@ function pageReady() {
 
                     socketId = socket.id;
 
+                    socket.on('user', function(data){
+                        console.log(data)
+                    })
+                    socket.on('user2', function(data){
+                        console.log(data)
+                    })
+                    socket.on('user3', function(data){
+                        console.log(data)
+                    })
+                                                            
                     socket.on('user-left', function(id){
                         var video = document.querySelector('[data-socket="'+ id +'"]');
                         var parentDiv = video.parentElement;
