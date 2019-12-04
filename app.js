@@ -23,30 +23,23 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/', function(req, res, next){
+app.post('/:username', function(req, res, next){
 	console.log(req.body, req.params, req.query)
-	console.log('in here!')
-	axios
-	.get(`https://www.codewars.com/api/v1/users/${req.body.webhook.id}`)
-	.then(data => {
-		console.log(`This is the information on ${userInfo}`);
-		console.log(data);
+	console.log('in here!', req.params)
+	res.json({ 
+		user: req.params
 	})
-	.catch(err => {
-		// console.log("User not found!")
-		console.log(err);
-	});
 })
 
 io.on('connection', function(socket){
 	io.sockets.emit("user-joined", socket.id, io.engine.clientsCount, Object.keys(io.sockets.clients().sockets));
 
-	socket.on('signal', (toId, message) => {
-		io.to(toId).emit('signal', socket.id, message);
+		socket.on('signal', (toId, message) => {
+			io.to(toId).emit('signal', socket.id, message);
   	});
 
     socket.on("message", function(data){
-		io.sockets.emit("broadcast-message", socket.id, data);
+			io.sockets.emit("broadcast-message", socket.id, data);
     })
 
 	socket.on('disconnect', function() {
