@@ -2,7 +2,10 @@ var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var cors = require('cors')
+var bodyParser = require('body-parser')
 
+// parse application/json
+app.use(bodyParser.json())
 
 app.use(cors({
 	origin: function(origin, callback){
@@ -14,6 +17,7 @@ app.use(cors({
 
 
 app.get('/', function(req, res){
+	console.log(req.body, req.params, req.query)
   res.sendFile(__dirname + '/index.html');
 });
 
