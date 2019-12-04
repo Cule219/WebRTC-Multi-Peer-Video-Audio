@@ -5,6 +5,7 @@ var cors = require('cors')
 var bodyParser = require('body-parser')
 var axios = require('axios')
 
+
 // parse application/json
 app.use(bodyParser.json())
 
@@ -17,19 +18,22 @@ app.use(cors({
 }));
 
 
-app.get('/', function(req, res){
-	console.log(req.body, req.params, req.query)
-	console.log("Successfully added as collab")
-  res.sendFile(__dirname + '/index.html');
-});
+var secretRouter = require('./routes.js')(io); // pass here
+app.use('/', secretRouter)
 
-app.post('/:username', function(req, res, next){
-	console.log(req.body, req.params, req.query)
-	console.log('in here!', req.params)
-	res.json({ 
-		user: req.params
-	})
-})
+// app.get('/', function(req, res){
+// 	console.log(req.body, req.params, req.query)
+// 	console.log("Successfully added as collab")
+//   res.sendFile(__dirname + '/index.html');
+// });
+
+// app.post('/:username', function(req, res, next){
+// 	console.log(req.body, req.params, req.query)
+// 	console.log('in here!', req.params)
+// 	res.json({ 
+// 		user: req.params
+// 	})
+// })
 
 io.on('connection', function(socket){
 	io.sockets.emit("user-joined", socket.id, io.engine.clientsCount, Object.keys(io.sockets.clients().sockets));
