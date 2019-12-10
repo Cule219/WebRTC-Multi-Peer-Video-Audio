@@ -57,8 +57,9 @@ io.on('connection', function(socket){
 			io.sockets.emit("broadcast-message", socket.id, data);
     })
 
-	socket.on('disconnect', function() {
-		io.sockets.emit("user-left", socket.id);
+	socket.on('disconnect', function() {	
+		delete players[socket.handshake.query.name]
+		io.sockets.emit("user-left", socket.id, players);
 	})
 });
 

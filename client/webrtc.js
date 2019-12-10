@@ -50,7 +50,8 @@ function pageReady() {
                     //     console.log(data)
                     // })
                                                             
-                    socket.on('user-left', function(id){
+                    socket.on('user-left', function(id, players){
+                        console.log(players)
                         var video = document.querySelector('[data-socket="'+ id +'"]');
                         var parentDiv = video.parentElement;
                         video.parentElement.parentElement.removeChild(parentDiv);
