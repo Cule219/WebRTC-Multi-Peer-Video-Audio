@@ -21,6 +21,16 @@ app.use(cors({
 var secretRouter = require('./routes.js')(io); // pass here
 app.use('/', secretRouter)
 
+app.use(express.static(path.join(__dirname, './client')))
+
+// let client = path.join(__dirname + '../public/index.html')
+
+// console.log('client',client)
+//app.get('*', (req, res) => res.sendFile(client));
+// For any other routes, redirect to the index.html file of React
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './client/index.html'))
+})
 // app.get('/', function(req, res){
 // 	console.log(req.body, req.params, req.query)
 // 	console.log("Successfully added as collab")
