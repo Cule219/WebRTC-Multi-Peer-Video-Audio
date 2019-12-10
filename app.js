@@ -35,11 +35,19 @@ app.use('/', secretRouter)
 // 	})
 // })
 
+var players = {
+
+}	
+
 io.on('connection', function(socket){
-	io.sockets.emit("user-joined", socket.id, io.engine.clientsCount, Object.keys(io.sockets.clients().sockets));
-	io.sockets.emit('prompt-name',()=>{
-		console.log('emitted prompt-name')
-	})
+
+	console.log('user joined',socket.handshake.query)
+	players[socket.handshake.query.name] = {id: socket.id, score:0}
+	io.sockets.emit("user-joined", socket.id, io.engine.clientsCount, Object.keys(io.sockets.clients().sockets), players);
+	// io.sockets.emit('prompt-name',()=>{
+	// 	console.log('emitted prompt-name')
+	// })
+
 
 		socket.on('signal', (toId, message) => {
 			io.to(toId).emit('signal', socket.id, message);

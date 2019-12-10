@@ -31,24 +31,24 @@ function pageReady() {
             .then(getUserMediaSuccess)
             .then(function(){
 
-                socket = io.connect(config.host, {secure: true});
+                socket = io.connect(config.host, {secure: true, query: `name=${name}` });
                 socket.on('signal', gotMessageFromServer);  
 
                 socket.on('connect', function(){
 
                     socketId = socket.id;
 
-                    socket.on('user', function(data){
-                        console.log(data)
+                    // socket.on('user', function(data){
+                    //     console.log(data)
                         
-                    })
-                    socket.on('user2', function(data){
-                        console.log(data)
+                    // })
+                    // socket.on('user2', function(data){
+                    //     console.log(data)
                         
-                    })
-                    socket.on('user3', function(data){
-                        console.log(data)
-                    })
+                    // })
+                    // socket.on('user3', function(data){
+                    //     console.log(data)
+                    // })
                                                             
                     socket.on('user-left', function(id){
                         var video = document.querySelector('[data-socket="'+ id +'"]');
@@ -57,8 +57,8 @@ function pageReady() {
                     });
 
 
-                    socket.on('user-joined', function(id, count, clients){
-                        console.log(id, count, clients)
+                    socket.on('user-joined', function(id, count, clients, players){
+                        console.log(id, count, clients, players)
                         allClients = clients
                         clients.forEach(function(socketListId) {
                             if(!connections[socketListId]){
@@ -66,14 +66,14 @@ function pageReady() {
                                 //Wait for their ice candidate       
                                 connections[socketListId].onicecandidate = function(){
                                     if(event.candidate != null) {
-                                        console.log('SENDING ICE');
+                                        //console.log('SENDING ICE');
                                         socket.emit('signal', socketListId, JSON.stringify({'ice': event.candidate, 'name':name }));
                                     }
                                 }
 
                                 //Wait for their video stream
                                 connections[socketListId].onaddstream = function(){
-                                    console.log('emit',socketListId, name)
+                                    //console.log('emit',socketListId, name)
                                     gotRemoteStream(event, socketListId)
                                 }    
 
@@ -102,7 +102,7 @@ function pageReady() {
 }
 
 function getUserMediaSuccess(stream) {
-    console.log(localVideo, stream)
+    //console.log(localVideo, stream)
     localStream = stream;
     //localVideo.src = window.URL.createObjectURL(stream);
     localVideo.srcObject=stream;
@@ -152,13 +152,13 @@ function gotMessageFromServer(fromId, message) {
     //Make sure it's not coming from yourself
     if(fromId != socketId) {
         i++; 
-        console.log(allClients)
-        if(allClients.length > 1){
-            newClients = allClients.map(client=>{
-                return { id: client, name: signal.name}
-            })
-        }
-        console.log(signal.name, allClients, i, newClients, '????')
+        // console.log(allClients)
+        // if(allClients.length > 1){
+        //     newClients = allClients.map(client=>{
+        //         return { id: client, name: signal.name}
+        //     })
+        // }
+        //console.log(signal.name, allClients, i, newClients, '????')
 
 
 
