@@ -14,8 +14,7 @@ var peerConnectionConfig = {
 };
 var name; 
 function pageReady() {  
-    name = prompt('name?')
-    
+    name = prompt('name?')    
     //name = 'niko'
 
     localVideo = document.getElementById('localVideo');
@@ -52,6 +51,8 @@ function pageReady() {
                                                             
                     socket.on('user-left', function(id, players){
                         console.log(players)
+                        showPlayers(players)
+
                         var video = document.querySelector('[data-socket="'+ id +'"]');
                         var parentDiv = video.parentElement;
                         video.parentElement.parentElement.removeChild(parentDiv);
@@ -60,6 +61,7 @@ function pageReady() {
 
                     socket.on('user-joined', function(id, count, clients, players){
                         console.log(id, count, clients, players)
+                        showPlayers(players)
                         allClients = clients
                         clients.forEach(function(socketListId) {
                             if(!connections[socketListId]){
@@ -179,4 +181,15 @@ function gotMessageFromServer(fromId, message) {
             connections[fromId].addIceCandidate(new RTCIceCandidate(signal.ice)).catch(e => console.log(e));
         }                
     }
+}
+
+function showPlayers(players){
+
+    let scoreboard = document.querySelector('#scoreboard');
+    scoreboard.innerHTML = ''
+
+    for(let p in players){
+        scoreboard.innerHTML += `<li>${p} score is: ${players[p].score}</li>`
+    }
+
 }
