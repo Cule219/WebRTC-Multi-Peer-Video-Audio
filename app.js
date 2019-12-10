@@ -21,7 +21,7 @@ app.use(cors({
 var secretRouter = require('./routes.js')(io); // pass here
 app.use('/', secretRouter)
 
-app.use(express.static(path.join(__dirname, './client')))
+//app.use(express.static(path.join(__dirname, './client')))
 
 // let client = path.join(__dirname + '../public/index.html')
 
