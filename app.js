@@ -1,4 +1,8 @@
-var app = require('express')();
+//var app = require('express')();
+var express = require('express');
+var app = express();
+
+
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var cors = require('cors')
@@ -21,7 +25,7 @@ app.use(cors({
 var secretRouter = require('./routes.js')(io); // pass here
 app.use('/', secretRouter)
 
-//app.use(express.static(path.join(__dirname, './client')))
+app.use(express.static(path.join(__dirname, './client')))
 
 // let client = path.join(__dirname + '../public/index.html')
 
