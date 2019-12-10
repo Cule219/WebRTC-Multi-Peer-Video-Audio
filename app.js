@@ -35,33 +35,6 @@ app.use('/', secretRouter)
 // 	})
 // })
 
-var players = {
-
-}	
-
-io.on('connection', function(socket){
-
-	console.log('user joined',socket.handshake.query)
-	players[socket.handshake.query.name] = {id: socket.id, score:0}
-	io.sockets.emit("user-joined", socket.id, io.engine.clientsCount, Object.keys(io.sockets.clients().sockets), players);
-	// io.sockets.emit('prompt-name',()=>{
-	// 	console.log('emitted prompt-name')
-	// })
-
-
-		socket.on('signal', (toId, message) => {
-			io.to(toId).emit('signal', socket.id, message);
-  	});
-
-    socket.on("message", function(data){
-			io.sockets.emit("broadcast-message", socket.id, data);
-    })
-
-	socket.on('disconnect', function() {	
-		delete players[socket.handshake.query.name]
-		io.sockets.emit("user-left", socket.id, players);
-	})
-});
 
 http.listen(process.env.PORT || 3000, function(){
   console.log('listening on *:3000', process.env);

@@ -48,6 +48,10 @@ function pageReady() {
                     // socket.on('user3', function(data){
                     //     console.log(data)
                     // })
+                    socket.on('updateScore', function(players){
+                        console.log(players);
+                        showPlayers(players)
+                    })
                                                             
                     socket.on('user-left', function(id, players){
                         console.log(players)
