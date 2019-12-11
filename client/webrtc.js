@@ -139,6 +139,7 @@ function gotRemoteStream(event, id) {
     video.setAttribute('data-socket', id);
     video.setAttribute('username', 'name');
     //video.src         = window.URL.createObjectURL(event.stream);
+    console.log(window.URL, event.stream)
     video.srcObject=event.stream
       //  localStream = stream;
     //localVideo.src = window.URL.createObjectURL(stream);
