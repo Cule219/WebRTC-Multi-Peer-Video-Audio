@@ -5,7 +5,7 @@
 // var cors = require('cors')
 // var bodyParser = require('body-parser')
 // var axios = require('axios')
-
+var path = require('path')
 
 // // parse application/json
 // app.use(bodyParser.json())
@@ -56,11 +56,11 @@ module.exports = function(io) { // catch here
   var express = require('express');
   var router  = express.Router();
 
-  router.get('/', function(req, res){
-    console.log(req.body, req.params, req.query)
-    console.log("Successfully added as collab")
-    res.sendFile(__dirname + '/index.html');
-  });
+  // router.get('/', function(req, res){
+  //   console.log(req.body, req.params, req.query)
+  //   console.log("Successfully added as collab")
+  //   res.sendFile(__dirname + '/index.html');
+  // });
   
   router.post('/:username', function(req, res, next){
     console.log(req.body, req.params, req.query)
@@ -74,8 +74,18 @@ module.exports = function(io) { // catch here
 
     res.json({ 
       user: req.params
-    })
+    })  
   })
+
+  // let client = path.join(__dirname + '../public/index.html')
+  // console.log('client',client)
+
+  // router.get('*', (req, res) => {
+  //   console.log("doesnt fire")
+  //   res.sendFile(path.join(__dirname, '../frontend/build/index.html'))
+  // })
+
+
 
   return router;
 }

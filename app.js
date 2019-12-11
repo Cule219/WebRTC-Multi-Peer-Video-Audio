@@ -25,51 +25,24 @@ app.use(cors({
 var secretRouter = require('./routes.js')(io); // pass here
 app.use('/', secretRouter)
 
-app.use(express.static(path.join(__dirname, './client')))
 
+app.use(express.static(__dirname + '/client'))
+// Uncomment this line for production
 // let client = path.join(__dirname + '../public/index.html')
-
 // console.log('client',client)
-//app.get('*', (req, res) => res.sendFile(client));
-// For any other routes, redirect to the index.html file of React
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './client/index.html'))
 })
-// app.get('/', function(req, res){
-// 	console.log(req.body, req.params, req.query)
-// 	console.log("Successfully added as collab")
-//   res.sendFile(__dirname + '/index.html');
-// });
 
-// app.post('/:username', function(req, res, next){
-// 	console.log(req.body, req.params, req.query)
-// 	console.log('in here!', req.params)
-// 	res.json({ 
-// 		user: req.params
-// 	})
+
+
+// app.get('*', (req, res) => {
+//    res.sendFile(__dirname + '/client/index.html');
 // })
 
 
 http.listen(process.env.PORT || 3000, function(){
-  console.log('listening on *:3000', process.env);
+  console.log('listening on *:3000!!!');
 });
 
-// var express = require('express')
-// var cors = require('cors')
-//   //, routes = require('./routes');
-// var app = require('express')(3000);
-
-// 	// app.use(cors())
-
-	
-// 	var server = require('http').Server(app);
-// 	var io = require('socket.io')(server);
-// //var app = module.exports = express();
-
-// //var io = require('socket.io')(app);
-
-
-
-// app.listen(3000, function(){
-// 	console.log("Express server listening on port %d in %s mode", process.env);
-// });
