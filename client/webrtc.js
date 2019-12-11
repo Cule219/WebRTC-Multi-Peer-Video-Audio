@@ -58,8 +58,11 @@ function pageReady() {
                         showPlayers(players)
 
                         var video = document.querySelector('[data-socket="'+ id +'"]');
-                        var parentDiv = video.parentElement;
-                        video.parentElement.parentElement.removeChild(parentDiv);
+                        console.log(video)
+                        if(video){
+                            var parentDiv = video.parentElement;
+                            video.parentElement.parentElement.removeChild(parentDiv);
+                        }
                     });
 
 
@@ -125,9 +128,9 @@ function gotRemoteStream(event, id) {
     var videos = document.querySelectorAll('video'),
         video  = document.createElement('video'),
         div    = document.createElement('div'),
-
         nameDiv = document.createElement('div');
 
+        console.log(videos, video, '[][][][]')
 
         div.setAttribute('id', 'hi')
 
