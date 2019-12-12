@@ -94,14 +94,23 @@ function pageReady() {
 
                         //Create an offer to connect with your local description
                         
-                        if(count >= 2){
+                        //if(count >= 2){
+                            console.log('in this', id)   
                             connections[id].createOffer().then(function(description){
                                 connections[id].setLocalDescription(description).then(function() {
                                     // console.log(connections);
                                     socket.emit('signal', id, JSON.stringify({'sdp': connections[id].localDescription}));
                                 }).catch(e => console.log(e));        
                             });
-                        }
+                        //}
+
+
+
+                                // myPeerConnection.createOffer().then(function(offer) {
+                                //     return myPeerConnection.setLocalDescription(new RTCSessionDescription(offer));
+                                //   });
+
+                                //myPeerConnection.createOffer().then(myPeerConnection.setLocalDescription);
                     });                    
                 })       
         
@@ -112,12 +121,14 @@ function pageReady() {
 }
 
 function getUserMediaSuccess(stream) {
-    //console.log(localVideo, stream)
+    console.log(localVideo, stream)
     localStream = stream;
     //localVideo.src = window.URL.createObjectURL(stream);
     localVideo.srcObject=stream;
 
 }
+
+
 
 // video.src=vendorUrl.createObjectURL(stream);
 // video.play();
@@ -125,6 +136,7 @@ function getUserMediaSuccess(stream) {
 // video.play();
 
 function gotRemoteStream(event, id) {
+    console.log(event, id)
     var videos = document.querySelectorAll('video'),
         video  = document.createElement('video'),
         div    = document.createElement('div'),
@@ -163,13 +175,6 @@ function gotMessageFromServer(fromId, message) {
     //Make sure it's not coming from yourself
     if(fromId != socketId) {
         i++; 
-        // console.log(allClients)
-        // if(allClients.length > 1){
-        //     newClients = allClients.map(client=>{
-        //         return { id: client, name: signal.name}
-        //     })
-        // }
-        //console.log(signal.name, allClients, i, newClients, '????')
 
 
 
