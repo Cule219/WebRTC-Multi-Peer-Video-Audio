@@ -21,7 +21,10 @@ function pageReady() {
     remoteVideo = document.getElementById('remoteVideo');
 
     var constraints = {
-        video: true,
+        video: {
+            max: 200
+        },
+        frameRate: { max: 3 },
         audio: false,
     };
 
@@ -37,17 +40,6 @@ function pageReady() {
 
                     socketId = socket.id;
 
-                    // socket.on('user', function(data){
-                    //     console.log(data)
-                        
-                    // })
-                    // socket.on('user2', function(data){
-                    //     console.log(data)
-                        
-                    // })
-                    // socket.on('user3', function(data){
-                    //     console.log(data)
-                    // })
                     socket.on('updateScore', function(players){
                         console.log(players);
                         showPlayers(players)
@@ -71,6 +63,15 @@ function pageReady() {
                         showPlayers(players)
                         allClients = clients
                         clients.forEach(function(socketListId) {
+                            console.log(socketListId)
+                        //let clientsCopy = [...clients]
+                        //for(let i =clients.length-1; i>=0; i--){
+                        //for(let i=0; i<2; i++){
+                            //let j = Math.floor(Math.random()*clients.length)    
+                            //console.log(j)
+                            
+                            //let socketListId= clients[j]
+                            console.log(socketListId)
                             if(!connections[socketListId]){
                                 connections[socketListId] = new RTCPeerConnection(peerConnectionConfig);
                                 //Wait for their ice candidate       
@@ -91,26 +92,20 @@ function pageReady() {
                                 connections[socketListId].addStream(localStream);                                                                
                             }
                         });
+                        
 
                         //Create an offer to connect with your local description
                         
-                        //if(count >= 2){
-                            console.log('in this', id)   
+                        if(count >= 2){
+                            console.log('in this', id, connections)   
                             connections[id].createOffer().then(function(description){
                                 connections[id].setLocalDescription(description).then(function() {
                                     // console.log(connections);
                                     socket.emit('signal', id, JSON.stringify({'sdp': connections[id].localDescription}));
                                 }).catch(e => console.log(e));        
                             });
-                        //}
+                        }
 
-
-
-                                // myPeerConnection.createOffer().then(function(offer) {
-                                //     return myPeerConnection.setLocalDescription(new RTCSessionDescription(offer));
-                                //   });
-
-                                //myPeerConnection.createOffer().then(myPeerConnection.setLocalDescription);
                     });                    
                 })       
         
@@ -128,12 +123,20 @@ function getUserMediaSuccess(stream) {
 
 }
 
+function closeAll(){
+    console.log(connections)
+    for(let id in connections){
+        console.log(id)
+        connections[id].close()
+    }
+    console.log(connections)
+}
+
+// setTimeout(function(){
+//     closeAll()
+// }, 5000)
 
 
-// video.src=vendorUrl.createObjectURL(stream);
-// video.play();
-// video.srcObject=stream;
-// video.play();
 
 function gotRemoteStream(event, id) {
     console.log(event, id)
@@ -145,6 +148,7 @@ function gotRemoteStream(event, id) {
         console.log(videos, video, '[][][][]')
 
         div.setAttribute('id', 'hi')
+        window.div = div;
 
 
     
@@ -161,7 +165,11 @@ function gotRemoteStream(event, id) {
     video.playsinline = true;
     
     div.appendChild(video);  
-    div.appendChild(nameDiv);    
+    div.appendChild(nameDiv);
+
+    let i = document.createElement('i')
+    i.appendChild(document.createTextNode(id))
+    div.appendChild(i)
     document.querySelector('.videos').appendChild(div);      
 }
 
